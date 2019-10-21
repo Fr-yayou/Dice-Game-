@@ -1,6 +1,6 @@
 
 
-var scores, roundScore, activePlayer , gamePlaying;
+var scores, roundScore, activePlayer , gamePlaying, lastDice;
 
 init();
 
@@ -30,7 +30,12 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
         diceDom.style.display = 'block';
         diceDom.src = 'dice-' + dice + '.png'
         //update the round score
-        if (dice !== 1) {
+        if (dice === 6 && lastDice === 6) {
+            //player looses score//
+            scores[activePlayer] = 0
+            document.querySelector('score-' + activePlayer).textContent = 0;
+            nextPlayer();
+        } else if (dice !== 1) {
             //add score
             roundScore += dice;
             // roundScore = roundScore + dice // same thing than ligne up just different operator//
@@ -38,6 +43,7 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
         } else {
             nextPlayer();
         }
+        lastDice = dice;
     }
 
 });
@@ -49,10 +55,10 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
     scores[activePlayer] += roundScore;
 
     //update UI
-    document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer]
+        document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer]
 
     //CHECK IF PLAYER WOn THE GAME//
-    if (scores[activePlayer] >= 10) {
+    if (scores[activePlayer] >= 100) {
         document.querySelector('#name-' + activePlayer).textContent = 'Winner'
         document.querySelector('.dice').style.display = 'none'
         document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
